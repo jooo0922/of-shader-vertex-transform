@@ -102,7 +102,16 @@ void ofApp::draw(){
     cloudShader.begin();
     
     cloudShader.setUniformTexture("tex", cloudImg, 0); // 구름 텍스쳐 이미지 유니폼 변수에 전송
+    
+    cloudShader.setUniform3f("scale", glm::vec3(1.5, 1, 1));
+    cloudShader.setUniform1f("rotation", 0.0f);
+    cloudShader.setUniform3f("translation", glm::vec3(-0.55, 0, 0));
     cloudMesh.draw(); // 구름메쉬 드로우콜 호출하여 그려줌
+    
+    cloudShader.setUniform3f("scale", glm::vec3(1, 1, 1));
+    cloudShader.setUniform1f("rotation", 1.0f);
+    cloudShader.setUniform3f("translation", glm::vec3(0.4, 0.2, 0));
+    cloudMesh.draw(); // 구름메쉬 드로우콜 호출하여 그려줌 -> 하나의 메쉬를 가지고 여러 번 드로우콜을 호출하여 화면 상에 여러 개의 메쉬를 복사하여 그려줄 수 있음.
     
     cloudShader.end();
     // cloudShader 사용 중단
