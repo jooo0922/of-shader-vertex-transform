@@ -14,19 +14,34 @@ out vec2 fragUV;
 void main() {
   vec3 scaled = pos * scale; // 스케일 연산 먼저
 
-  vec3 rotated;
+  /*
+    지금 rotated.z 에 값을 할당하지 않은 상태로
+    translation 과 더해주면, 구름메쉬가 제대로 렌더링이 안되고 있음.
+
+    정확한 건 아니지만,
+    오픈프레임웍스에서는 셰이더 변수를 선언하기만 한다고
+    값이 자동으로 초기화되어 할당되는 건 아닌 거 같음.
+
+    GLSL Editor 에서는 그냥 vec3 변수를 선언하기만 해도
+    (0, 0, 0) 으로 초기화되서 사용할 수 있는 반면,
+
+    오픈프레임웍스에서 사용하는 셰이더는
+    그냥 vec3 변수명;
+    이렇게 변수를 '선언'만 한다고 값이 자동으로 '할당' 되지 않는 거 같음.
+
+    그러니 할당되지 않은 값에 translation.z 값을 더해봤자
+    뭐가 나올 수 없는 거...
+
+    일단 이 정도로 원인을 파악하고 있고,
+    추후에 계속 예제를 진행해보면서 비슷한 상황이 발생할 시
+    이런 방식으로 해결하도록 하고, 관련 이슈에 대해서 좀 더 
+    리서치해봐야 할 거 같음. 정확한 원인을 알아야 하니까. 
+  */
+  vec3 rotated = vec3(0.0);
   rotated.x = (cos(rotation) * scaled.x) - (sin(rotation) * scaled.y); // 그 다음 회전 연산
   rotated.y = (cos(rotation) * scaled.y) + (sin(rotation) * scaled.x);
 
-  // 일단 크기, 회전, 이동 연산을 아래와 같이 진행해 줌. 
-  // 원래 교재에 나와있는 공식과는 다르기는 한데, 교재에 나온대로 하면 렌더링이 안되서 아래와 같이 translation.x, y 값을 직접 더해줬음.
-  vec3 final;
-  final.x = rotated.x + translation.x; // 마지막으로 이동 연산
-  final.y = rotated.y + translation.y;
-  final.z = rotated.z;
-
-  // gl_Position = vec4(rotated + translation, 1.0); // 지금 이런 식으로 + 연산자를 통한 할당을 해주면 렌더링이 안되고 있음. translation.z 값을 더해주면 화면에 안찍히고 있음..ㅠ 뭐가 문제지..
-  gl_Position = vec4(final, 1.0);
+  gl_Position = vec4(rotated + translation, 1.0); // 마지막으로 이동 연산
 
   fragUV = vec2(uv.x, 1.0 - uv.y);
 }

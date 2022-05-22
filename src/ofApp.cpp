@@ -35,7 +35,7 @@ void buildMesh(ofMesh& mesh, float w, float h, glm::vec3 pos) {
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofDisableArbTex(); // 스크린 픽셀 좌표를 사용하는 텍스쳐 관련 오픈프레임웍스 레거시 지원 설정 비활성화
-    ofDisableDepthTest(); // 깊이테스트를 활성화하여 z좌표값을 깊이버퍼에 저장해서 z값을 기반으로 앞뒤를 구분하여 렌더링할 수 있도록 함.
+    ofEnableDepthTest(); // 깊이테스트를 활성화하여 z좌표값을 깊이버퍼에 저장해서 z값을 기반으로 앞뒤를 구분하여 렌더링할 수 있도록 함.
     
     buildMesh(charMesh, 0.1, 0.2, glm::vec3(0.0, -0.2, 0.0)); // 캐릭터메쉬 생성
     buildMesh(backgroundMesh, 1.0, 1.0, glm::vec3(0.0, 0.0, 0.5)); // 배경메쉬 생성
@@ -69,7 +69,6 @@ void ofApp::draw(){
     frame = (frame > 10) ? 0.0 : frame += 0.2; // frame의 정수부분이 5번의 draw() 함수 호출 이후 바뀌도록 프레임 계산
     glm::vec2 spriteSize = glm::vec2(0.28, 0.19); // 스프라이트시트 텍스쳐 사이즈를 프레임 하나 만큼의 사이즈로 조절할 때 필요한 값
     glm::vec2 spriteFrame = glm::vec2((int)frame % 3, (int)frame / 3); // 스프라이트시트 텍스쳐 offset(각각 u, v 방향으로) 적용 시 사용할 vec2값
-    
     
     // spritesheetShader 바인딩하여 사용 시작
     spritesheetShader.begin();
